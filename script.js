@@ -41,6 +41,21 @@ document.querySelector('.btn-activitats').addEventListener('click', () => {
 
 });
 
+document.querySelector('.btn-test').addEventListener('click', () => {
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            document.querySelector('.sortida-json').innerHTML = xhr.responseText;
+        }
+    }
+
+    xhr.open("GET", "/practica-3-ws/API/Test");
+
+    xhr.setRequestHeader('X-Authorization', localStorage.getItem('token'));
+
+    xhr.send();
+});
+
 window.onstorage = e => {
     if (e.key == null && e.newValue == null) {
         botons();

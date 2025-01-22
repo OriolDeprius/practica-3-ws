@@ -34,13 +34,11 @@ class Server {
                 header('Content-type: application/json');
                 echo json_encode(array("error" => "Unauthorized"));
             }
-        }
-
-        //ToDo: Validar el token a la petició
-        if ($resource == "Activitats") {
+        } else if ($resource == "Activitats") {
             $headers = apache_request_headers();
+            $tokenValidat = $this->validarToken();
             // echo $headers['X-Authorization'];
-            if (isset($headers['X-Authorization'])) {
+            if (isset($headers['X-Authorization']) and $tokenValidat) {
                 $bd = new BdD();
                 $respostaBD = $bd->getTotesLesOfertes();
                 header('HTTP/1.1 200');
@@ -50,6 +48,15 @@ class Server {
                 header('HTTP/1.1 401');
                 header('Content-type: application/json');
                 echo json_encode(array("error" => "Unauthorized"));
+            }
+        } else if ($resource == "Test") {
+            $temps = time();
+            $headers = apache_request_headers();
+            $match = false;
+            if (isset($headers)) {
+                $token = $headers['X-Authorization'];
+                while ($temps < time() + 60000 and !$match) {
+                }
             }
         }
     }
@@ -84,6 +91,29 @@ class Server {
 
         $token = str_shuffle($token);
         return $token;
+    }
+    /**
+     * validarToken
+     * true si el token es vàlid, false si no ho és
+     * @return Boolean 
+     */
+    public function validarToken() {
+        $headers = apache_request_headers();
+        if (isset($headers['X-Authorization'])) {
+            $token = $headers['X-Authorization'];
+            $numMayus = preg_match_all('/[A-Z]/', $token);
+            $numMinus = preg_match_all('/[a-z]/', $token);
+            $numNum = preg_match_all('/[0-9]/', $token);
+            $numEspecial = preg_match_all('/[\W_]/', $token);
+
+            if ($numMayus >= 2 && $numMinus >= 2 && $numNum >= 4 && $numEspecial >= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
 $server = new Server();
