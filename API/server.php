@@ -56,8 +56,21 @@ class Server {
             $match = false;
             if (isset($headers)) {
                 $token = $headers['X-Authorization'];
-                while ($temps < time() + 60000 and !$match) {
+                while ($temps < time() + 60 and !$match) {
+                    $tokenGenerat = $this->createToken();
+                    if ($token == $tokenGenerat) {
+                        $match = true;
+                    }
                 }
+                if (!$match) {
+                    header('HTTP/1.1 200');
+                    header('Content-type: application/json');
+                    echo json_encode(array("status" => "Token molt robust"));
+                }
+            } else if ($match) {
+                header('HTTP/1.1 200');
+                header('Content-type: application/json');
+                echo json_encode(array("status" => "Token molt dèbil"));
             }
         }
     }
