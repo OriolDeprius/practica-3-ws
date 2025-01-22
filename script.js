@@ -14,7 +14,6 @@ document.querySelector('.btn-token').addEventListener('click', () => {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let token = JSON.parse(xhr.responseText).token;
-            console.log(xhr.responseText);
             localStorage.setItem('token', token);
             botons();
         }

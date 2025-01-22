@@ -1,9 +1,12 @@
 <?php
+
+require_once 'BdD.php';
+
 /**
  * Classe Server
  * S'encarrega de servir la petició
  */
-class Server {    
+class Server {
     /**
      * serve
      * Funció que s'encarrega de servir la petició
@@ -19,41 +22,37 @@ class Server {
         array_shift($paths);
         $resource = array_shift($paths);
         $api_key = array_shift($paths);
-        $tokenGenerat = "";
 
         if ($resource == "GetToken" && $method == "GET") {
-            if ($api_key == "Pr%C3%A0ctica-WS"){
+            if ($api_key == "Pr%C3%A0ctica-WS") {
                 $token = $this->createToken();
                 header('HTTP/1.1 200');
                 header('Content-type: application/json');
                 echo json_encode(array("token" => $token));
-            }
-            else {
+            } else {
                 header('HTTP/1.1 401');
                 header('Content-type: application/json');
                 echo json_encode(array("error" => "Unauthorized"));
             }
         }
 
-        if($resource == "Activitats"){
+        //ToDo: Validar el token a la petició
+        if ($resource == "Activitats") {
             $headers = apache_request_headers();
-            echo json_encode($headers['X-Authorization']);
-            echo json_encode($tokenGenerat);
-            /* if($headers['X-Authorization'] == $tokenGenerat){
+            // echo $headers['X-Authorization'];
+            if (isset($headers['X-Authorization'])) {
                 $bd = new BdD();
                 $respostaBD = $bd->getTotesLesOfertes();
                 header('HTTP/1.1 200');
                 header('Content-type: application/json');
                 echo json_encode($respostaBD);
-            }
-            else{
+            } else {
                 header('HTTP/1.1 401');
                 header('Content-type: application/json');
                 echo json_encode(array("error" => "Unauthorized"));
-            } */
+            }
         }
-
-    }    
+    }
     /**
      * getToken
      * Genera un token aleatori
@@ -61,7 +60,7 @@ class Server {
      */
     public function createToken() {
         $numMayus = rand(2, 5);
-        $numMinus= rand(2, 5);
+        $numMinus = rand(2, 5);
         $numNum = rand(2, 5);
         $numEspecial = rand(2, 5);
         $token = "";
@@ -82,10 +81,9 @@ class Server {
             $especial = chr(rand(33, 47));
             $token .= $especial;
         }
-        
+
         $token = str_shuffle($token);
-        $tokenGenerat = $token;
-        return $token; 
+        return $token;
     }
 }
 $server = new Server();
