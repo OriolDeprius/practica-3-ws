@@ -52,15 +52,17 @@ class Server {
             }
         } else if ($resource == "Test") {
             $temps = time();
+            $tempsMax = time() + 60;
             $headers = apache_request_headers();
             $match = false;
             if (isset($headers)) {
                 $token = $headers['X-Authorization'];
-                while ($temps < time() + 60 and !$match) {
+                while ($temps < $tempsMax and !$match) {
                     $tokenGenerat = $this->createToken();
                     if ($token == $tokenGenerat) {
                         $match = true;
                     }
+                    $temps = time();
                 }
                 if (!$match) {
                     header('HTTP/1.1 200');
