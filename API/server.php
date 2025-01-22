@@ -22,9 +22,10 @@ class Server {
         array_shift($paths);
         $resource = array_shift($paths);
         $api_key = array_shift($paths);
+        urldecode($api_key);
 
         if ($resource == "GetToken" && $method == "GET") {
-            if ($api_key == "Pr%C3%A0ctica-WS") {
+            if ($api_key == "Pràctica-WS") {
                 $token = $this->createToken();
                 header('HTTP/1.1 200');
                 header('Content-type: application/json');
