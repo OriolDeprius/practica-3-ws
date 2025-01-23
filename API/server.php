@@ -54,7 +54,7 @@ class Server {
             }
         } else if ($resource == "Test") {
             $temps = time();
-            $tempsMax = time() + 10;
+            $tempsMax = time() + 60;
             $headers = apache_request_headers();
             $match = false;
             if (isset($headers)) {
