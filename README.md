@@ -36,6 +36,6 @@ Cal enviar:
 
 - Credencials accés base de dades
 
-  - /API/BdD.php > `\_\_constructor`
+  - /API/BdD.php > `__constructor()`
 
 - Importar la taula `ofertes` a la base de dades `ganga` (A l'arrel del projecte hi ha un arxiu `ofertes.sql`). Ja que el `connect` es fa a aquesta base de dades. Si tingués un altre nom, canvia el nom de la base de dades al `__construct`
