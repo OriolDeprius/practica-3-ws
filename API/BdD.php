@@ -52,7 +52,7 @@ class BdD {
     public function __construct() {
         $this->db_host = 'localhost';
         $this->db_user = 'root';
-        $this->db_password = '';
+        $this->db_password = 'root';
         $this->db_db = 'ganga';
 
         $this->connect($this->db_host, $this->db_user, $this->db_password, $this->db_db);

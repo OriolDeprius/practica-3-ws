@@ -22,7 +22,9 @@ class Server {
         array_shift($paths);
         $resource = array_shift($paths);
         $api_key = array_shift($paths);
-        $api_key = urldecode($api_key);
+        if($api_key){
+            $api_key = urldecode($api_key);
+        }
 
         if ($resource == "GetToken" && $method == "GET") {
             if ($api_key == "Pràctica-WS") {
@@ -52,7 +54,7 @@ class Server {
             }
         } else if ($resource == "Test") {
             $temps = time();
-            $tempsMax = time() + 60;
+            $tempsMax = time() + 10;
             $headers = apache_request_headers();
             $match = false;
             if (isset($headers)) {
