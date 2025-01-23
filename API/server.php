@@ -40,7 +40,6 @@ class Server {
         } else if ($resource == "Activitats") {
             $headers = apache_request_headers();
             $tokenValidat = $this->validarToken();
-            // echo $headers['X-Authorization'];
             if (isset($headers['X-Authorization']) and $tokenValidat) {
                 $bd = new BdD();
                 $respostaBD = $bd->getTotesLesOfertes();
@@ -57,7 +56,7 @@ class Server {
             $tempsMax = time() + 60;
             $headers = apache_request_headers();
             $match = false;
-            if (isset($headers)) {
+            if (isset($headers['X-Authorization'])) {
                 $token = $headers['X-Authorization'];
                 while ($temps < $tempsMax and !$match) {
                     $tokenGenerat = $this->createToken();
@@ -70,12 +69,17 @@ class Server {
                     header('HTTP/1.1 200');
                     header('Content-type: application/json');
                     echo json_encode(array("status" => "Token molt robust"));
-                }
-            } else if ($match) {
-                header('HTTP/1.1 200');
-                header('Content-type: application/json');
-                echo json_encode(array("status" => "Token molt dèbil"));
+                } else if ($match) {
+                    header('HTTP/1.1 200');
+                    header('Content-type: application/json');
+                    echo json_encode(array("status" => "Token molt dèbil"));
             }
+            } else{
+                header('HTTP/1.1 404');
+                header('Content-type: application/json');
+                echo json_encode(array("error" => "Token no proporcionat"));
+            }
+            
         }
     }
     /**
